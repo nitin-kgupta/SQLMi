@@ -8,22 +8,22 @@
 
 Param (
     [string]$InstanceName  = 'sqlmidemo12',
-    [string]$ResourceGroup = 'NetworkWatcherRG',
-    [string]$keyVaultName  = 'StoredCred',
-    [string]$Subscription  = '4a4d72d0-3bef-4af1-aafa-691a15ace26c',
-    [string]$StorageAccount= 'sampledataload',
-    [string]$BlobContainer = 'employeedata',
+    [string]$ResourceGroup = 'NetworkWatcherDemoRG12',
+    [string]$keyVaultName  = 'StoredCred12',
+    [string]$Subscription  = '1a4d22d0-1bef-2af1-aafa-691a15ace26c',
+    [string]$StorageAccount= 'sampledataDemoload1',
+    [string]$BlobContainer = 'employeedataDemo',
     [String]$FileShareName = 'backupdump',
     [string]$Subject       = "SQL Managed Instance Backup Report - $(Get-Date)",
     [string]$smtpAccount   = "nitinkg@microsoft.com",
     [string]$smtpPassword  = "**********************",  # Update with actual password or store into AKV
-    [string]$Destination   = "\\MININT-K2V8LMS\Users\nitinkg\Desktop"
+    [string]$Destination   = "\\FileServer\Backup\Full"
  )
 
 #Getting credentials from keyVault
 Set-AzureRmContext -Subscription $Subscription
-$StorageKey   =  (Get-AzureKeyVaultSecret -VaultName $keyVaultName -Name 'StorageKey').SecretValueText
-$SQLMiCred    =  (Get-AzureKeyVaultSecret -VaultName $keyVaultName -Name 'SQLMiCred').SecretValueText
+$StorageKey   =  (Get-AzureKeyVaultSecret -VaultName $keyVaultName -Name 'StorageKey12').SecretValueText
+$SQLMiCred    =  (Get-AzureKeyVaultSecret -VaultName $keyVaultName -Name 'SQLMiCred12').SecretValueText
 $Databases    =  Get-AzureRmSqlInstanceDatabase -InstanceName $InstanceName -ResourceGroupName $ResourceGroup |select Name
 
 $Pass = $smtpPassword | ConvertTo-SecureString -AsPlainText -Force; 
@@ -75,7 +75,7 @@ $Databases.Name | ForEach-Object {
     Try
     {
         #Taking Copy-Only backup into Storage Blob Container
-        $Status = SQLCMD -S tcp:sqlmidemo12.public.ec8d90149606.database.windows.net,3342 -U superadmin -P $SQLMiCred -Q $Query
+        $Status = SQLCMD -S tcp:sqlmi12.public.ed6d90319706.database.windows.net,3342 -U superadmin -P $SQLMiCred -Q $Query
         If (($status | Select-String "successfully") -and ($Status | Select-String "100 percent" ))
         {
                 Write-Host "Database [$($_)] Backup Completed Successfully"
