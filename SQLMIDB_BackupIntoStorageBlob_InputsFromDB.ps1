@@ -56,9 +56,8 @@ Function Move-BackupCopy ($SourceBackup, $Destination, $StorageAccount, $keyVaul
 return $flag
 }
 
-$subscriptions = ExecuteSqlQuery -Query 'Select distinct Subscription from demo..sqlmibackupproperties' -Server 'MININT-K2V8LMS.fareast.corp.microsoft.com'
+$subscriptions = ExecuteSqlQuery -Query 'Select distinct Subscription from demo..sqlmibackupproperties' -Server 'myserver.contosa.microsoft.com'
 $BackupProperties = ExecuteSqlQuery -Query "select * from demo..sqlmibackupproperties where subscription = '$($_)'" -Server 'MININT-K2V8LMS.fareast.corp.microsoft.com'
-
 
 $subscriptions.subscription | ForEach-Object `
 {
